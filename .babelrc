@@ -1,0 +1,46 @@
+{
+	"plugins": [
+		"babel-plugin-transform-react-jsx"
+	],
+	"presets": [
+		[
+			"babel-preset-env",
+			{
+				"modules": false
+			}
+		]
+	],
+	"env": {
+		"commonjs": {
+			"presets": [
+				[
+					"babel-preset-env",
+				{
+					"modules": "commonjs"
+				}
+				]
+			]
+		},	
+		"umd": {
+			"presets": [
+				[
+					"babel-preset-env",
+				{
+					"modules": "umd"
+				}
+				]
+			]
+		},
+		"test": {
+			"presets": [
+				[
+					"babel-preset-env",
+				{
+					"modules": "commonjs"
+				}
+				]
+			]
+		}
+	}
+}
+
