@@ -13,6 +13,11 @@ const clientPositionFromMouseEvent = evt => ({
 	y: evt.clientY,
 });
 
+const relativePointInside = (rect, point) => ({
+	x: (point.x - rect.left) / rect.width,
+	y: (point.y - rect.top) / rect.height
+});
+
 class DragCapture extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,10 +32,40 @@ class DragCapture extends React.Component {
 			//   eventName :: string,
 			//   listener :: function
 			// }
-			pointerStates: {}
+			pointerStates: {},
+
+			isUpdatingContextFrame: false,
 		}
 
 		this.beginTrackingFromMouseDown = this.beginTrackingFromMouseDown.bind(this);
+	}
+
+	beginUpdatingContextFrameIfNecessary() {
+		if (this.state.isUpdatingContextFrame) {
+			return;
+		}
+
+		this.setState(
+			{ isUpdatingContextFrame: true },
+			() => this.updateContextFrame());
+	}
+
+	stopUpdatingContextFrame() {
+		this.setState({ isUpdatingContextFrame: false });
+	}
+
+	updateContextFrame() {
+		if (!this.state.isUpdatingContextFrame) {
+			return;
+		}
+
+		if (this.contextElement == null) {
+			this.contextFrame = null;
+		}
+
+		this.contextFrame = this.contextElement.getBoundingClientRect();
+
+		window.requestAnimationFrame(() => this.updateContextFrame());
 	}
 
 	beginTrackingFromMouseDown(evt) {
@@ -57,6 +92,8 @@ class DragCapture extends React.Component {
 	// Assumes that event handlers listed in `pointerState`
 	// are not yet registered.
 	beginTracking(pointerID, pointerState) {
+		this.beginUpdatingContextFrameIfNecessary();
+
 		pointerState.windowEventListeners
 			.forEach(({ eventName, listener }) => {
 				window.addEventListener(
@@ -82,7 +119,12 @@ class DragCapture extends React.Component {
 			return;
 		}
 
-		this.props.dragDidMove(pointerID, position);
+		this.props.dragDidMove(
+			pointerID,
+			{
+				clientPosition: position,
+				relativePosition: relativePointInside(this.contextFrame, position)
+			});
 
 		const updatedPointerState =
 			Object.assign(
@@ -119,6 +161,16 @@ class DragCapture extends React.Component {
 		this.setState({
 			pointerStates: updatedPointerStates
 		});
+
+		// If there are no more active pointers,
+		// stop updating context frame on animation frames.
+		if (Object.keys(updatedPointerStates).length === 0) {
+			this.stopUpdatingContextFrame();
+		}
+	}
+
+	componentWillUnmount() {
+		// TODO: Unregister all event listeners.
 	}
 
 	render() {
@@ -130,6 +182,7 @@ class DragCapture extends React.Component {
 
 		return (
 			<div
+				ref={elm => this.contextElement = elm}
 				className={className}
 				style={style}
 				onMouseDown={this.beginTrackingFromMouseDown}
