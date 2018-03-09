@@ -106,7 +106,10 @@ export default class MeasureBounds extends React.Component {
 		return (
 			<BatchForAnimationFrame>
 				{request => (
-					<div ref={elm => this.measuredElement = elm}>
+					<div
+						ref={elm => this.measuredElement = elm}
+						style={{display: 'inline-block'}}
+					>
 						{this.props.children(
 							() => request(() => this.getBoundsOfMeasuredElement()))}
 					</div>
