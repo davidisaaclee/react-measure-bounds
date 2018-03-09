@@ -92,12 +92,10 @@ export default class MeasureBounds extends React.Component {
 	// getBoundsOfMeasuredElement :: () -> ?DOMRect
 	getBoundsOfMeasuredElement() {
 		if (this.measuredElement == null) {
-			console.log("no measured element");
 			return null;
 		}
 
 		if (this.measuredElement.getBoundingClientRect == null) {
-			console.log("no gbcr method on", this.measuredElement);
 			return null;
 		}
 
