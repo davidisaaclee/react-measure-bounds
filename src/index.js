@@ -72,7 +72,9 @@ class DragCapture extends React.Component {
 					listener)
 			});
 
-		this.props.dragDidBegin(pointerID, pointerState.position);
+		this.props.dragDidBegin(
+			pointerID,
+			pointerState.clientPosition);
 
 		this.setState({
 			pointerStates: Object.assign(
@@ -82,7 +84,7 @@ class DragCapture extends React.Component {
 		});
 	}
 
-	updateTrackingPosition(pointerID, position) {
+	updateTrackingPosition(pointerID, clientPosition) {
 		const pointerState =
 			this.state.pointerStates[pointerID];
 
@@ -92,13 +94,13 @@ class DragCapture extends React.Component {
 
 		this.props.dragDidMove(
 			pointerID,
-			position);
+			clientPosition);
 
 		const updatedPointerState =
 			Object.assign(
 				{},
 				pointerState,
-				{ position });
+				{ clientPosition });
 
 		this.setState({
 			pointerStates: Object.assign(
@@ -108,7 +110,7 @@ class DragCapture extends React.Component {
 		});
 	}
 
-	stopTracking(pointerID, position) {
+	stopTracking(pointerID, clientPosition) {
 		const pointerState =
 			this.state.pointerStates[pointerID];
 
@@ -124,7 +126,7 @@ class DragCapture extends React.Component {
 		const updatedPointerStates = this.state.pointerStates;
 		delete updatedPointerStates[pointerID];
 
-		this.props.dragDidEnd(pointerID, position);
+		this.props.dragDidEnd(pointerID, clientPosition);
 
 		this.setState({
 			pointerStates: updatedPointerStates
