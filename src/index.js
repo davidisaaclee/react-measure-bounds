@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import MeasureBounds from './MeasureBounds';
+
 const mousePointerID = 'mouse';
 
 const pointerState = (clientPosition, windowEventListeners) => ({
@@ -17,6 +19,7 @@ const relativePointInside = (rect, point) => ({
 	x: (point.x - rect.left) / rect.width,
 	y: (point.y - rect.top) / rect.height
 });
+
 
 class DragCapture extends React.Component {
 	constructor(props) {
