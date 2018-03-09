@@ -156,5 +156,39 @@ class DragCapture extends React.Component {
 	}
 };
 
+class RelativeDragCapture extends React.Component {
+	render() {
+		const {
+			shouldBeginDrag,
+			dragDidBegin, dragDidMove, dragDidEnd,
+			...restProps
+		} = this.props;
+
+		return (
+			<MeasureBounds>
+				{(getBounds) => (
+					<DragCapture
+						shouldBeginDrag={() => true}
+						dragDidBegin={(cursorID, position) => getBounds()
+								.then(bounds => dragDidBegin(
+									cursorID,
+									relativePointInside(bounds, position)))}
+						dragDidMove={(cursorID, position) => getBounds()
+								.then(bounds => dragDidMove(
+									cursorID,
+									relativePointInside(bounds, position)))}
+						dragDidEnd={(cursorID, position) => getBounds()
+								.then(bounds => dragDidEnd(
+									cursorID,
+									relativePointInside(bounds, position)))}
+						{...restProps}
+					/>
+				)}
+			</MeasureBounds>
+		);
+	}
+}
+
+export { RelativeDragCapture };
 export default DragCapture;
 
