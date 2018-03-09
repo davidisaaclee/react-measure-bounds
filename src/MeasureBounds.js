@@ -37,9 +37,11 @@ class BatchForAnimationFrame extends React.Component {
 			return;
 		}
 
-		this.requestQueue
-			.forEach(({ perform, resolve }) => resolve(perform()));
-		this.requestQueue = [];
+		if (this.requestQueue.length > 0) {
+			this.requestQueue
+				.forEach(({ perform, resolve }) => resolve(perform()));
+			this.requestQueue = [];
+		}
 
 		window.requestAnimationFrame(() => this.onAnimationFrame());
 	}
