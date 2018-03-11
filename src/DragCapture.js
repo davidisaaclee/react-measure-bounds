@@ -121,7 +121,11 @@ class DragCapture extends React.Component {
 	stopTrackingFromTouch(evt) {
 		for (let i = 0; i < evt.changedTouches.length; i++) {
 			const touch = evt.changedTouches.item(i);
-			this.numberOfTouchesTracked--;
+
+			if (this.state.pointerStates[pointerIDFromTouch(touch)] != null) {
+				this.numberOfTouchesTracked--;
+			}
+
 			this.stopTracking(
 				pointerIDFromTouch(touch),
 				clientPositionFromTouch(touch));
