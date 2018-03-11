@@ -32,6 +32,16 @@ function omit(obj, key) {
 	return copy;
 }
 
+function isValidHandler(handler) {
+	if (handler == null) {
+		return false;
+	} else if (!(handler instanceof Function)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 class DragCapture extends React.Component {
 	constructor(props) {
 		super(props);
@@ -168,9 +178,9 @@ class DragCapture extends React.Component {
 	// Assumes that event handlers listed in `pointerState`
 	// are not yet registered.
 	beginTracking(pointerID, pointerState) {
-		this.props.dragDidBegin(
-			pointerID,
-			pointerState.clientPosition);
+		if (isValidHandler(this.props.dragDidBegin)) {
+			this.props.dragDidBegin(pointerID, clientPosition);
+		}
 
 		this.setState(prevState => ({
 			pointerStates: {
@@ -188,9 +198,9 @@ class DragCapture extends React.Component {
 			return;
 		}
 
-		this.props.dragDidMove(
-			pointerID,
-			clientPosition);
+		if (isValidHandler(this.props.dragDidMove)) {
+			this.props.dragDidMove(pointerID, clientPosition);
+		}
 
 		this.setState(prevState => ({
 			...prevState,
@@ -212,7 +222,9 @@ class DragCapture extends React.Component {
 			return;
 		}
 
-		this.props.dragDidEnd(pointerID, clientPosition);
+		if (isValidHandler(this.props.dragDidEnd)) {
+			this.props.dragDidEnd(pointerID, clientPosition);
+		}
 
 		this.setState(prevState => ({
 			...prevState,
@@ -227,8 +239,6 @@ class DragCapture extends React.Component {
 
 	render() {
 		const {
-			shouldBeginDrag,
-			// dragDidBegin, dragDidMove, dragDidEnd,
 			className, style, children
 		} = this.props;
 
@@ -245,10 +255,15 @@ class DragCapture extends React.Component {
 	}
 };
 
+DragCapture.propTypes = {
+	dragDidBegin: PropTypes.func,
+	dragDidMove: PropTypes.func,
+	dragDidEnd: PropTypes.func,
+};
+
 class RelativeDragCapture extends React.Component {
 	render() {
 		const {
-			shouldBeginDrag,
 			dragDidBegin, dragDidMove, dragDidEnd,
 			...restProps
 		} = this.props;
@@ -257,17 +272,16 @@ class RelativeDragCapture extends React.Component {
 			<MeasureBounds>
 				{(getBounds) => (
 					<DragCapture
-						shouldBeginDrag={() => true}
 						dragDidBegin={(cursorID, position) => getBounds()
-								.then(bounds => dragDidBegin(
+								.then(bounds => isValidHandler(dragDidBegin) && dragDidBegin(
 									cursorID,
 									relativePointInside(bounds, position)))}
 						dragDidMove={(cursorID, position) => getBounds()
-								.then(bounds => dragDidMove(
+								.then(bounds => isValidHandler(dragDidMove) && dragDidMove(
 									cursorID,
 									relativePointInside(bounds, position)))}
 						dragDidEnd={(cursorID, position) => getBounds()
-								.then(bounds => dragDidEnd(
+								.then(bounds => isValidHandler(dragDidEnd) && dragDidEnd(
 									cursorID,
 									relativePointInside(bounds, position)))}
 						{...restProps}
