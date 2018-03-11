@@ -5,6 +5,8 @@ import MeasureBounds from './MeasureBounds';
 
 const mousePointerID = 'mouse';
 
+const pointerIDFromTouch = touch => touch.identifier;
+
 const makePointerState = (clientPosition) => ({
 	clientPosition,
 });
@@ -14,11 +16,21 @@ const clientPositionFromMouseEvent = evt => ({
 	y: evt.clientY,
 });
 
+const clientPositionFromTouch = touch => ({
+	x: touch.clientX,
+	y: touch.clientY,
+});
+
 const relativePointInside = (rect, point) => ({
 	x: (point.x - rect.left) / rect.width,
 	y: (point.y - rect.top) / rect.height
 });
 
+function omit(obj, key) {
+	const copy = Object.assign({}, obj);
+	delete copy[key];
+	return copy;
+}
 
 class DragCapture extends React.Component {
 	constructor(props) {
@@ -29,8 +41,8 @@ class DragCapture extends React.Component {
 			// where PointerState ::= {
 			//   clientPosition :: Point,
 			// }
-			pointerStates: {},
-		}
+			pointerStates: {}
+		};
 
 		this.beginTrackingFromMouseDown =
 			this.beginTrackingFromMouseDown.bind(this);
@@ -39,7 +51,15 @@ class DragCapture extends React.Component {
 		this.stopTrackingFromMouseUp =
 			this.stopTrackingFromMouseUp.bind(this);
 
+		this.beginTrackingFromTouch =
+			this.beginTrackingFromTouch.bind(this);
+		this.updateTrackingFromTouch =
+			this.updateTrackingFromTouch.bind(this);
+		this.stopTrackingFromTouch =
+			this.stopTrackingFromTouch.bind(this);
+
 		this.isTrackingMouse = false;
+		this.numberOfTouchesTracked = 0;
 	}
 
 	beginTrackingFromMouseDown(evt) {
@@ -69,8 +89,12 @@ class DragCapture extends React.Component {
 			return;
 		}
 
-		window.addEventListener('mousemove', this.updateTrackingFromMouseMove);
-		window.addEventListener('mouseup', this.stopTrackingFromMouseUp);
+		window.addEventListener(
+			'mousemove',
+			this.updateTrackingFromMouseMove);
+		window.addEventListener(
+			'mouseup', 
+			this.stopTrackingFromMouseUp);
 		this.isTrackingMouse = true;
 	}
 
@@ -84,6 +108,63 @@ class DragCapture extends React.Component {
 		this.isTrackingMouse = false;
 	}
 
+	beginTrackingFromTouch(evt) {
+		const wasAlreadyTrackingTouches = this.numberOfTouchesTracked > 0;
+
+		for (let i = 0; i < evt.changedTouches.length; i++) {
+			const touch = evt.changedTouches.item(i);
+			this.numberOfTouchesTracked++;
+			this.beginTracking(
+				pointerIDFromTouch(touch),
+				makePointerState(clientPositionFromTouch(touch)));
+		}
+
+		if (!wasAlreadyTrackingTouches && this.numberOfTouchesTracked > 0) {
+			this.addTouchEventListeners();
+		}
+
+		evt.preventDefault();
+	}
+
+	updateTrackingFromTouch(evt) {
+		for (let i = 0; i < evt.changedTouches.length; i++) {
+			const touch = evt.changedTouches.item(i);
+			this.updateTrackingPosition(
+				pointerIDFromTouch(touch),
+				clientPositionFromTouch(touch));
+		}
+
+		evt.preventDefault();
+	}
+
+	stopTrackingFromTouch(evt) {
+		for (let i = 0; i < evt.changedTouches.length; i++) {
+			const touch = evt.changedTouches.item(i);
+			this.numberOfTouchesTracked--;
+			this.stopTracking(
+				pointerIDFromTouch(touch),
+				clientPositionFromTouch(touch));
+		}
+
+		this.removeTouchEventListenersIfNecessary();
+
+		evt.preventDefault();
+	}
+
+	addTouchEventListeners() {
+		window.addEventListener('touchmove', this.updateTrackingFromTouch);
+		window.addEventListener('touchend', this.stopTrackingFromTouch);
+	}
+
+	removeTouchEventListenersIfNecessary() {
+		if (this.numberOfTouchesTracked > 0) {
+			return;
+		}
+
+		window.removeEventListener('touchmove', this.updateTrackingFromTouch);
+		window.removeEventListener('touchend', this.stopTrackingFromTouch);
+	}
+
 	// Assumes that event handlers listed in `pointerState`
 	// are not yet registered.
 	beginTracking(pointerID, pointerState) {
@@ -91,12 +172,12 @@ class DragCapture extends React.Component {
 			pointerID,
 			pointerState.clientPosition);
 
-		this.setState({
-			pointerStates: Object.assign(
-				{},
-				this.state.pointerStates,
-				{ [pointerID]: pointerState })
-		});
+		this.setState(prevState => ({
+			pointerStates: {
+				...prevState.pointerStates,
+				[pointerID]: pointerState
+			}
+		}));
 	}
 
 	updateTrackingPosition(pointerID, clientPosition) {
@@ -111,18 +192,16 @@ class DragCapture extends React.Component {
 			pointerID,
 			clientPosition);
 
-		const updatedPointerState =
-			Object.assign(
-				{},
-				pointerState,
-				{ clientPosition });
-
-		this.setState({
-			pointerStates: Object.assign(
-				{},
-				this.state.pointerStates,
-				{ [pointerID]: updatedPointerState })
-		});
+		this.setState(prevState => ({
+			...prevState,
+			pointerStates: {
+				...prevState.pointerStates,
+				[pointerID]: {
+					...prevState.pointerStates[pointerID],
+					clientPosition
+				}
+			},
+		}));
 	}
 
 	stopTracking(pointerID, clientPosition) {
@@ -133,19 +212,17 @@ class DragCapture extends React.Component {
 			return;
 		}
 
-
-		const updatedPointerStates = this.state.pointerStates;
-		delete updatedPointerStates[pointerID];
-
 		this.props.dragDidEnd(pointerID, clientPosition);
 
-		this.setState({
-			pointerStates: updatedPointerStates
-		});
+		this.setState(prevState => ({
+			...prevState,
+			pointerStates: omit(prevState.pointerStates, pointerID)
+		}));
 	}
 
 	componentWillUnmount() {
-		// TODO: Unregister all event listeners.
+		this.removeTouchEventListenersIfNecessary();
+		this.removeMouseEventListenersIfNecessary();
 	}
 
 	render() {
@@ -160,6 +237,7 @@ class DragCapture extends React.Component {
 				className={className}
 				style={style}
 				onMouseDown={this.beginTrackingFromMouseDown}
+				onTouchStart={this.beginTrackingFromTouch}
 			>
 				{children}
 			</div>
