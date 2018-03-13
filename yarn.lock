@@ -44,6 +44,12 @@
   dependencies:
     arrify "^1.0.1"
 
+"@davidisaaclee/react-queue@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@davidisaaclee/react-queue/-/react-queue-0.2.0.tgz#354f5641329f52612b5c718805808b981c82004e"
+  dependencies:
+    prop-types "^15.6.1"
+
 "@dump247/storybook-state@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@dump247/storybook-state/-/storybook-state-1.2.3.tgz#cff1c792fbb1f8da65d62ab608f790c38e08063b"

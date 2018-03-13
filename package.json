@@ -41,6 +41,7 @@
 		"uuid": "^3.2.1"
 	},
 	"dependencies": {
+		"@davidisaaclee/react-queue": "^0.2.0",
 		"prop-types": "^15.6.1",
 		"ramda": "^0.25.0",
 		"react": "^16.2.0",

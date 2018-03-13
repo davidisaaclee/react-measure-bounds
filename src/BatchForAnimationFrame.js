@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Queue from './Queue';
+import Queue from '@davidisaaclee/react-queue';
 
 /*
  * <BatchForAnimationFrame>
@@ -55,8 +55,11 @@ class BatchForAnimationFrame extends React.Component {
 
 	render() {
 		return (
-			<Queue dequeueRef={dequeue => this.dequeue = dequeue}>
-				{request => this.props.children(request)}
+			<Queue>
+				{(request, dequeue) => {
+					this.dequeue = dequeue;
+					return this.props.children(request);
+				}}
 			</Queue>
 		);
 	}
