@@ -4,14 +4,28 @@ and touch pointers.
 
 A pointer is tracked once a `touchstart` or `mousedown` event occurs within the
 `DragCapture` element, and continues to be tracked until the corresponding `mouseup`
-or `touchend` event occurs. **Notably, the pointer continues to be tracked if it
-is dragged outside of the `DragCapture` element.**
+or `touchend` event occurs. **Notably, a pointer continues to be tracked even when
+dragged outside of the `DragCapture` element.**
+
+![Demonstration](https://media.giphy.com/media/xFoIfk4ObNry0QaqUp/giphy.gif)
+
 
 ```javascript
+import DragCapture, { RelativeDragCapture } from '@davidisaaclee/react-drag-capture';
+
+// `position`s from `DragCapture` will be client position of pointer
 <DragCapture
-	dragDidBegin={(pointerID, position) => console.log(`${pointerID}: Began drag at ${position}`)}
-	dragDidMove={(pointerID, position) => console.log(`${pointerID}: Moved drag at ${position}`)}
-	dragDidEnd={(pointerID, position) => console.log(`${pointerID}: Ended drag at ${position}`)}
+  dragDidBegin={(pointerID, position) => console.log(`${pointerID}: Began drag at (${position.x}, ${position.y})`)}
+  dragDidMove={(pointerID, position) => console.log(`${pointerID}: Moved drag at (${position.x}, ${position.y})`)}
+  dragDidEnd={(pointerID, position) => console.log(`${pointerID}: Ended drag at (${position.x}, ${position.y})`)}
+/>
+
+// `position`s from `RelativeDragCapture` will be between (0, 0) and (1, 1), relative to the `RelativeDragCapture` element.
+// Top-left of the element is (0, 0), bottom-right is (1, 1).
+<RelativeDragCapture
+  dragDidBegin={(pointerID, position) => console.log(`${pointerID}: Began drag at (${position.x}, ${position.y})`)}
+  dragDidMove={(pointerID, position) => console.log(`${pointerID}: Moved drag at (${position.x}, ${position.y})`)}
+  dragDidEnd={(pointerID, position) => console.log(`${pointerID}: Ended drag at (${position.x}, ${position.y})`)}
 />
 ```
 
@@ -40,9 +54,9 @@ yarn build
 yarn run storybook
 ```
 
-## Relation to the Pointer API
+## Relation to the Pointer Events API
 A lot of this component's functionality is more powerfully implemented in the
-[Pointer API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events),
+[Pointer Events API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events),
 specifically when combined with
 [`setPointerCapture()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture).
 
