@@ -218,14 +218,14 @@ class DragCapture extends React.Component {
 		} = this.props;
 
 		return (
-			<div
+			<span
 				className={className}
-				style={style}
+				style={{ display: 'inline-block', ...style }}
 				onMouseDown={this.beginTrackingFromMouseDown}
 				onTouchStart={this.beginTrackingFromTouch}
 			>
 				{children}
-			</div>
+			</span>
 		)
 	}
 };
