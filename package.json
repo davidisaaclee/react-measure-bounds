@@ -1,5 +1,5 @@
 {
-	"name": "@davidisaaclee/drag-capture-react",
+	"name": "@davidisaaclee/react-drag-capture",
 	"version": "0.1.0",
 	"main": "./lib/index.js",
 	"module": "./es/index.js",
@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/davidisaaclee/drag-capture-react"
+		"url": "https://github.com/davidisaaclee/react-drag-capture"
 	},
 	"files": [
 		"es/",
