@@ -39,7 +39,6 @@ const Cursor = styled.span.attrs({
 storiesOf('DragCapture', module)
   .add('basic', withState({}, (store) => (
 		<DragCapture
-			shouldBeginDrag={() => true}
 			dragDidBegin={(cursorID, position) => store.set({ [cursorID]: position })}
 			dragDidMove={(cursorID, position) => store.set({ [cursorID]: position })}
 			dragDidEnd={(cursorID, position) => store.set({ [cursorID]: undefined })}
