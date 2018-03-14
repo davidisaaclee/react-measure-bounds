@@ -1,7 +1,8 @@
 {
 	"plugins": [
 		"babel-plugin-transform-react-jsx",
-		"transform-object-rest-spread"
+		"transform-object-rest-spread",
+    "babel-plugin-external-helpers"
 	],
 	"presets": [
 		[
@@ -12,26 +13,6 @@
 		]
 	],
 	"env": {
-		"commonjs": {
-			"presets": [
-				[
-					"babel-preset-env",
-				{
-					"modules": "commonjs"
-				}
-				]
-			]
-		},	
-		"umd": {
-			"presets": [
-				[
-					"babel-preset-env",
-				{
-					"modules": "umd"
-				}
-				]
-			]
-		},
 		"test": {
 			"presets": [
 				[
