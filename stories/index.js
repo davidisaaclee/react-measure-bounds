@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { withState } from '@dump247/storybook-state';
-import DragCapture, { RelativeDragCapture } from '../src';
+import { DragCapture, RelativeDragCapture } from '../src';
 import MeasureBounds from '../src/MeasureBounds';
 
 const AbsoluteCursor = styled.span.attrs({

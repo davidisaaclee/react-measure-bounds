@@ -11,7 +11,7 @@ dragged outside of the `DragCapture` element.**
 
 
 ```javascript
-import DragCapture, { RelativeDragCapture } from '@davidisaaclee/react-drag-capture';
+import { DragCapture, RelativeDragCapture } from '@davidisaaclee/react-drag-capture';
 
 // `position`s from `DragCapture` will be client position of pointer
 <DragCapture
