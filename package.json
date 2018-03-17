@@ -1,5 +1,5 @@
 {
-	"name": "@davidisaaclee/react-drag-capture",
+	"name": "@davidisaaclee/react-measure-bounds",
 	"version": "0.1.0",
 	"main": "./lib/index.js",
 	"module": "./es/index.js",
@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/davidisaaclee/react-drag-capture"
+		"url": "https://github.com/davidisaaclee/react-measure-bounds"
 	},
 	"files": [
 		"es/",
@@ -21,13 +21,9 @@
 		"build:es": "rollup --config --output.format es --output.file es/index.js",
 		"build": "npm run build:commonjs && npm run build:es",
 		"prepare": "npm run test && npm run build",
-		"test": "cross-env BABEL_ENV=test ava",
-		"storybook": "start-storybook -p 9001 -c .storybook"
+		"test": "echo \"Tests not defined\""
 	},
 	"devDependencies": {
-		"@dump247/storybook-state": "^1.2.3",
-		"@storybook/react": "^3.3.14",
-		"ava": "^0.25.0",
 		"babel-cli": "^6.26.0",
 		"babel-core": "^6.26.0",
 		"babel-plugin-external-helpers": "^6.22.0",
@@ -44,12 +40,10 @@
 		"rollup-plugin-commonjs": "^9.1.0",
 		"rollup-plugin-node-resolve": "^3.2.0",
 		"rollup-plugin-peer-deps-external": "^2.1.0",
-		"styled-components": "^3.2.1",
-		"uuid": "^3.2.1"
+		"styled-components": "^3.2.1"
 	},
 	"dependencies": {
-		"@davidisaaclee/react-queue": "^0.2.0",
-		"prop-types": "^15.6.1"
+		"@davidisaaclee/react-queue": "^0.2.0"
 	},
 	"peerDependencies": {
 		"react": "^16.2.0"

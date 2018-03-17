@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Queue from '@davidisaaclee/react-queue';
 
 /*
