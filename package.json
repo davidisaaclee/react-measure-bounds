@@ -18,9 +18,8 @@
 	"keywords": [],
 	"scripts": {
 		"build:commonjs": "rollup --config --output.format cjs --output.file lib/index.js",
-		"build:umd": "rollup --config --output.format umd --output.file dist/index.js",
 		"build:es": "rollup --config --output.format es --output.file es/index.js",
-		"build": "npm run build:commonjs && npm run build:umd && npm run build:es",
+		"build": "npm run build:commonjs && npm run build:es",
 		"prepare": "npm run test && npm run build",
 		"test": "cross-env BABEL_ENV=test ava",
 		"storybook": "start-storybook -p 9001 -c .storybook"

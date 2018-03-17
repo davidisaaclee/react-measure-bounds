@@ -15,7 +15,9 @@ export default {
   plugins: [
     babel({
 			exclude: path.join(__dirname, 'node_modules/**'),
-			plugins: ["babel-plugin-external-helpers"]
+			plugins: [
+				"external-helpers",
+			],
     }),
 		peerDepsExternal(),
 		commonjs(),
