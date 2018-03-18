@@ -6,9 +6,9 @@ A React component which provides a way to measure its own bounding client rect.
   {(getBoundingClientRect) => (
     <button
       onClick={_ =>
-				// getBoundingClientRect :: () -> Promise<DOMRect>
-				getBoundingClientRect()
-					.then(bounds => console.log(`Bounds: ${bounds}`))}
+        // getBoundingClientRect :: () -> Promise<DOMRect>
+        getBoundingClientRect()
+          .then(bounds => console.log(`Bounds: ${bounds}`))}
     />
   )}
 </MeasureBounds>
