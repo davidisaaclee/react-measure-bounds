@@ -37,13 +37,13 @@ export default class MeasureBounds extends React.Component {
 	}
 
 	render() {
-		const { children, ...restProps } = this.props;
+		const { children, style, ...restProps } = this.props;
 		return (
 			<BatchForAnimationFrame>
 				{request => (
 					<div
 						ref={elm => this.measuredElement = elm}
-						style={{display: 'inline-block'}}
+						style={{display: 'inline-block', ...style}}
 						{...restProps}
 					>
 						{children(
