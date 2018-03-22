@@ -1,6 +1,6 @@
 {
 	"name": "@davidisaaclee/react-measure-bounds",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"main": "./lib/index.js",
 	"module": "./es/index.js",
 	"author": "David Lee <david@david-lee.net>",
